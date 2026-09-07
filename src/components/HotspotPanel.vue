@@ -1,6 +1,6 @@
 <template>
   <div class="panel" id="hotspot">
-    <div class="p-title"><span class="tag-icon"></span>热点议题分布<span class="badge">8大主题</span></div>
+    <div class="p-title"><span class="tag-icon"></span>热点议题分布<span class="badge">前十大主题</span></div>
     <div class="hs-body">
       <div id="donut"><EChart :option="option" /></div>
       <div class="hs-legend">

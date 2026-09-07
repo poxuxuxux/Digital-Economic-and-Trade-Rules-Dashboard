@@ -10,6 +10,7 @@ const props = defineProps({
   option: { type: Object, required: true },
   notMerge: { type: Boolean, default: true },
 })
+const emit = defineEmits(['chart-click'])
 
 const el = ref(null)
 let chart = null
@@ -21,6 +22,8 @@ function resize() { chart && chart.resize() }
 
 onMounted(() => {
   chart = echarts.init(el.value)
+  chart.on('click', params => emit('chart-click', params))
+  chart.getZr().on('click', e => { if (!e.target) emit('chart-click', null) })
   render()
 })
 watch(() => props.option, render, { deep: true })

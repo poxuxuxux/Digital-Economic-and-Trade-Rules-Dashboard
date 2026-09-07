@@ -17,22 +17,12 @@ const orgCntAll = {}
 RULES.forEach(r => { orgCntAll[r.org] = (orgCntAll[r.org] || 0) + 1 })
 export const TOP5 = Object.entries(orgCntAll).sort((a, b) => b[1] - a[1]).slice(0, 5)
 
-// 热点议题：将「议题领域」自由文本映射到「议题分类表」8大主题（关键词映射）
-export const TOPIC_RULES = [
-  ['人工智能治理',       /人工智能|AI|算法/i],
-  ['数据与个人信息保护', /隐私|个人数据|数据保护|数字隐私|数据治理|数据获取/i],
-  ['数据跨境流动',       /数据流动|跨境|电子传输|本地化|充分性/i],
-  ['数字贸易与电商',     /数字贸易|电子商务|电商|关税|数字经济|贸易/i],
-  ['平台与内容治理',     /平台|内容治理|反垄断|竞争/i],
-  ['网络安全',           /安全/i],
-  ['数字身份与支付',     /身份|认证|支付|金融科技|货币/i],
-  ['技术与标准',         /标准|互操作|基础设施|测评|开源|算力/i],
+// 热点议题：直接按表格「议题领域」原始取值分类（不做主题归并、不再有"其他"兜底）
+export const TOPIC_PALETTE = [
+  '#f45b5b', '#ff9440', '#f7d94c', '#4cd97b', '#3fd6e0', '#3f8cff', '#8a6bff', '#e05fd0',
+  '#5fd0ff', '#7fe0a0', '#ffb02e', '#ff7a55', '#4fa8ff', '#b98cff', '#5ce0c0', '#ffd166',
+  '#6ec1ff', '#e879a0', '#9fd85c', '#5c7fae',
 ]
-export const TOPIC_COLORS = {
-  '人工智能治理': '#f45b5b', '数据与个人信息保护': '#ff9440', '数据跨境流动': '#f7d94c',
-  '数字贸易与电商': '#4cd97b', '平台与内容治理': '#3fd6e0', '网络安全': '#3f8cff',
-  '数字身份与支付': '#8a6bff', '技术与标准': '#e05fd0',
-}
 
 // 总览细分（按字段字典的文件类型枚举映射）
 export const SUB_MAP = [
@@ -47,22 +37,38 @@ export const SUB_MAP = [
 export const RANK_COLORS = [['#a06bff', '#5b2fd6'], ['#4fa8ff', '#1a56c9'], ['#7fd0ff', '#2f6fd6'],
   ['#ffb02e', '#e07a1f'], ['#4cd97b', '#1f9e52']]
 
+const HOTSPOT_TOP_N = 10
+
 function buildHotspots(list, total) {
-  const tc = {}; let un = 0
+  const tc = {}
   list.forEach(r => {
-    for (const [name, re] of TOPIC_RULES) {
-      if (re.test(r.field)) { tc[name] = (tc[name] || 0) + 1; return }
-    }
-    un++
+    const k = (r.field || '未分类').trim()
+    tc[k] = (tc[k] || 0) + 1
   })
-  const hs = Object.entries(tc).sort((a, b) => b[1] - a[1])
-    .map(([name, value]) => ({ name, value, pct: (value / total * 100).toFixed(1) + '%', color: TOPIC_COLORS[name] || '#8fa8c8' }))
-  if (un) hs.push({ name: '其他', value: un, pct: (un / total * 100).toFixed(1) + '%', color: '#5c7fae' })
-  return hs
+  const all = Object.entries(tc).sort((a, b) => b[1] - a[1])
+  const top = all.slice(0, HOTSPOT_TOP_N)
+    .map(([name, value], i) => ({
+      name, value,
+      pct: (value / total * 100).toFixed(1) + '%',
+      color: TOPIC_PALETTE[i % TOPIC_PALETTE.length],
+    }))
+  const rest = all.slice(HOTSPOT_TOP_N)
+  if (rest.length) {
+    const v = rest.reduce((s, [, n]) => s + n, 0)
+    top.push({ name: `其他(${rest.length}类)`, value: v, pct: (v / total * 100).toFixed(1) + '%', color: '#5c7fae' })
+  }
+  return top
 }
 function buildSubs(list) {
-  const sc = SUB_MAP.map(([k, re]) => [k, list.filter(r => re.test(r.fileType)).length])
-  sc.push(['报告/其他', list.length - sc.reduce((s, [, v]) => s + v, 0)])
+  // 每条记录只归入第一个命中的类别，避免同一 fileType 命中多个正则被重复计数
+  const sc = SUB_MAP.map(([k]) => [k, 0])
+  let other = 0
+  list.forEach(r => {
+    const i = SUB_MAP.findIndex(([, re]) => re.test(r.fileType))
+    if (i >= 0) sc[i][1]++
+    else other++
+  })
+  sc.push(['报告/其他', other])
   return sc
 }
 function buildRank(list) {
@@ -250,11 +256,5 @@ export const REGIONS = [
   { name: '亚洲',   value: 418, coord: [92, 48] },
   { name: '大洋洲', value: 99,  coord: [136, -25] },
 ]
-export const NET_NODES = [
-  { name: 'EU AI Act', x: 235, y: 128, size: 58, c1: '#37c8ff', c2: '#0f5fd0', fs: 13 },
-  { name: 'GDPR', x: 235, y: 38, size: 42, c1: '#4cd97b', c2: '#1a7a4a', fs: 12 },
-  { name: 'G7 AI Principles', x: 74, y: 92, size: 42, c1: '#f7d94c', c2: '#c9901a', fs: 10.5 },
-  { name: 'Digital Services Act', x: 396, y: 92, size: 42, c1: '#ff7a55', c2: '#c93a1a', fs: 10.5 },
-  { name: 'OECD AI Principles', x: 126, y: 210, size: 42, c1: '#8a6bff', c2: '#4a2fc0', fs: 10.5 },
-  { name: 'Data Act', x: 344, y: 210, size: 42, c1: '#e05fd0', c2: '#902080', fs: 10.5 },
-]
+/* 地图合作数据 → src/data/coopMap.js
+   国家合作网络数据 → src/data/coopNetwork.js */
