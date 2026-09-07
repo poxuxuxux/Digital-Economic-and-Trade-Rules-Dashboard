@@ -3,7 +3,7 @@
     <div class="p-title"><span class="tag-icon"></span>数字经贸规则观察<span class="ob-issue">（第1期）</span></div>
     <span class="arrow left" @click="step(-1)">‹</span>
     <div class="ob-body" ref="bodyEl" @mouseenter="pause" @mouseleave="resume">
-      <h4>{{ item.value + 1 }}. {{ current.title }}<span class="ocat">{{ current.cat }}</span></h4>
+      <h4>{{ item + 1 }}. {{ current.title }}<span class="ocat">{{ current.cat }}</span></h4>
       <p>{{ current.body }}</p>
     </div>
     <span class="arrow right" @click="step(1)">›</span>
