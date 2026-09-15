@@ -18,8 +18,11 @@
 
 <script setup>
 import { computed } from 'vue'
+import { store } from '../store.js'
 import { NEWS } from '../data/dashboard.js'
-const loop = computed(() => (NEWS.length ? [...NEWS, ...NEWS] : []))
+import { DOMESTIC_LATEST_RULES } from '../data/domesticDashboard.js'
+const entries = computed(() => store.scope === 'domestic' ? DOMESTIC_LATEST_RULES : NEWS)
+const loop = computed(() => (entries.value.length ? [...entries.value, ...entries.value] : []))
 </script>
 
 <style scoped>

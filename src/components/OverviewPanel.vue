@@ -1,5 +1,6 @@
 <template>
   <div class="panel" id="overview">
+    <template v-if="store.scope === 'global'">
     <div class="p-title">
       <svg width="22" height="22" viewBox="0 0 24 24" style="filter:drop-shadow(0 0 5px rgba(70,160,255,.9));flex:none;">
         <path d="M4 22V8h7v14M11 22V4h9v18M2 22h20" fill="none" stroke="#4db8ff" stroke-width="2.2" stroke-linejoin="round"/>
@@ -46,11 +47,36 @@
         <div class="v">{{ sub[1] }}</div>
       </div>
     </div>
+    </template>
+    <template v-else>
+      <div class="p-title"><span class="tag-icon"></span>国内规则总览</div>
+      <div class="ov-top domestic-overview-top">
+        <div class="ov-main">
+          <svg class="ov-doc" viewBox="0 0 58 62">
+            <path d="M14 4h26l10 10v40H14z" fill="rgba(30,90,190,.25)" stroke="#3f9dff" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M40 4v10h10" fill="none" stroke="#3f9dff" stroke-width="2.5"/>
+            <path d="M6 14h30v44H6z" fill="rgba(8,30,70,.9)" stroke="#5fc0ff" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M13 25h16M13 33h16M13 41h10" stroke="#7fd0ff" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="42" cy="52" r="7" fill="#08152e" stroke="#7fd0ff" stroke-width="2.5"/>
+            <circle cx="42" cy="52" r="2.4" fill="#7fd0ff"/>
+          </svg>
+          <div>
+            <div class="ov-num">{{ s.total.toLocaleString() }}</div>
+            <div class="ov-label">国内规则总量</div>
+          </div>
+        </div>
+      </div>
+      <div class="ov-subs">
+        <div class="ov-sub"><div class="k">政策</div><div class="v">{{ s.policy }}</div></div>
+        <div class="ov-sub"><div class="k">标准</div><div class="v">{{ s.standard }}</div></div>
+        <div class="ov-sub"><div class="k">法律</div><div class="v">{{ s.law }}</div></div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { stats } from '../store.js'
-const s = computed(() => stats.value)
+import { store, stats, domesticStats } from '../store.js'
+const s = computed(() => store.scope === 'domestic' ? domesticStats.value : stats.value)
 </script>

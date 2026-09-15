@@ -3,6 +3,7 @@ import {
   TREND, statsAll, statsForYears, SEARCH_POOL, FIELDS, FIELD_GET,
   RP_FACETS, RP_GET,
 } from './data/dashboard.js'
+import { DOMESTIC_TREND, domesticStatsAll, domesticStatsForYears } from './data/domesticDashboard.js'
 
 export const store = reactive({
   range: 'all',        // number(近N年) | 'all'
@@ -22,6 +23,10 @@ export const store = reactive({
 export const stats = computed(() => {
   if (store.range === 'all') return statsAll()
   return statsForYears(TREND.years.slice(-(+store.range)))
+})
+export const domesticStats = computed(() => {
+  if (store.range === 'all') return domesticStatsAll()
+  return domesticStatsForYears(DOMESTIC_TREND.map(item => item.year).slice(-(+store.range)))
 })
 export function setRange(r) { store.range = r }
 

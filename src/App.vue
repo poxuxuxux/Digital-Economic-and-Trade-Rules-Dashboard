@@ -5,7 +5,7 @@
     <ResultPage />
     <AdvSearch />
 
-    <div class="main">
+    <div v-if="store.scope === 'global'" class="main">
       <OverviewPanel />
       <TrendPanel />
       <RankPanel />
@@ -16,11 +16,12 @@
       <ImpactPanel />
       <ObservePanel />
     </div>
+    <DomesticDashboard v-else />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import Toolbar from './components/Toolbar.vue'
 import ResultPage from './components/ResultPage.vue'
@@ -34,8 +35,14 @@ import NetworkPanel from './components/NetworkPanel.vue'
 import NewsPanel from './components/NewsPanel.vue'
 import ImpactPanel from './components/ImpactPanel.vue'
 import ObservePanel from './components/ObservePanel.vue'
+import DomesticDashboard from './components/DomesticDashboard.vue'
+import { store } from './store.js'
 
 const stage = ref(null)
+
+watch(() => store.scope, scope => {
+  document.title = scope === 'domestic' ? '中国数字经贸规则库' : '全球数字经贸规则库'
+}, { immediate: true })
 
 function fit() {
   const s = Math.min(innerWidth / 1920, innerHeight / 1080)

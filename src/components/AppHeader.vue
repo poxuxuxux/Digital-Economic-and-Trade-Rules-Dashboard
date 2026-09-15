@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="side"><div class="h-btn">数说规则</div></div>
-    <div class="title">全球数字经贸规则库</div>
+    <div class="title">{{ store.scope === 'domestic' ? '中国数字经贸规则库' : '全球数字经贸规则库' }}</div>
     <div class="side">
       <div class="h-wrap">
         <div class="h-btn">图说规则</div>
