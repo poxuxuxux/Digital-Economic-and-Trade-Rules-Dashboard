@@ -183,8 +183,13 @@
   .sel .caret2 { font-size: 9px; color: #5f9fe8; transition: transform .2s; }
   .sel.open .caret2 { transform: rotate(180deg); }
   .sel-menu { position: absolute; top: 41px; left: -1px; min-width: calc(100% + 2px); z-index: 50; display: none;
+    max-height: min(280px, 42vh); overflow-y: auto; overscroll-behavior: contain;
     padding: 5px; background: #0d2b5e; border: 1px solid rgba(70,140,240,.6); border-radius: 8px;
-    box-shadow: 0 10px 24px rgba(0,0,0,.55); }
+    box-shadow: 0 10px 24px rgba(0,0,0,.55); scrollbar-width: thin; scrollbar-color: rgba(90,165,255,.7) rgba(255,255,255,.06); }
+  .sel-menu::-webkit-scrollbar { width: 6px; }
+  .sel-menu::-webkit-scrollbar-track { background: rgba(255,255,255,.06); border-radius: 3px; }
+  .sel-menu::-webkit-scrollbar-thumb { background: rgba(90,165,255,.7); border-radius: 3px; }
+  .sel-menu::-webkit-scrollbar-thumb:hover { background: rgba(130,195,255,.9); }
   .sel.open .sel-menu { display: block; }
   .sel-opt { padding: 7px 14px; border-radius: 6px; color: #cfe0f5; }
   .sel-opt:hover { background: rgba(50,120,230,.35); color: #fff; }
