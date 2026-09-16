@@ -71,6 +71,13 @@
         <div class="ov-sub"><div class="k">标准</div><div class="v">{{ s.standard }}</div></div>
         <div class="ov-sub"><div class="k">法律</div><div class="v">{{ s.law }}</div></div>
       </div>
+      <div class="domestic-type-bars">
+        <div v-for="type in domesticTypes" :key="type.key" class="domestic-type-bar">
+          <span class="domestic-type-label">{{ type.label }}</span>
+          <span class="domestic-type-track"><i :style="{ width: `${type.pct}%` }"></i></span>
+          <span class="domestic-type-pct">{{ type.pct }}%</span>
+        </div>
+      </div>
     </template>
   </div>
 </template>
@@ -79,4 +86,12 @@
 import { computed } from 'vue'
 import { store, stats, domesticStats } from '../store.js'
 const s = computed(() => store.scope === 'domestic' ? domesticStats.value : stats.value)
+const domesticTypes = computed(() => {
+  const total = domesticStats.value.total || 1
+  return [
+    { key: 'policy', label: '政策', value: domesticStats.value.policy },
+    { key: 'standard', label: '标准', value: domesticStats.value.standard },
+    { key: 'law', label: '法律', value: domesticStats.value.law },
+  ].map(type => ({ ...type, pct: Math.round(type.value / total * 100) }))
+})
 </script>

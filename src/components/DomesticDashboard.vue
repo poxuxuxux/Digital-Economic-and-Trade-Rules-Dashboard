@@ -1,11 +1,17 @@
 <template>
   <div class="main domestic-main">
-    <OverviewPanel />
-    <TrendPanel />
-    <DomesticMapPanel />
-    <NewsPanel />
-    <PublisherPanel />
-    <PolicyPanel />
+    <div class="domestic-side domestic-left">
+      <OverviewPanel />
+      <TrendPanel />
+    </div>
+    <div class="domestic-center-column">
+      <DomesticMapPanel />
+      <NewsPanel />
+    </div>
+    <div class="domestic-side domestic-right">
+      <PublisherPanel />
+      <PolicyPanel />
+    </div>
   </div>
 </template>
 

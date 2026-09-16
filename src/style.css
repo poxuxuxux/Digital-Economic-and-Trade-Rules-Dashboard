@@ -232,10 +232,15 @@
       "overview map map hotspot"
       "trend    map map network"
       "rank     news impact observe"; }
-  .domestic-main { grid-template-rows: 1fr 1fr;
-    grid-template-areas:
-      "overview map map publisher"
-      "trend    news news policy"; }
+  .domestic-main { grid-template-columns: 1fr 2fr 1fr; grid-template-rows: 1fr;
+    grid-template-areas: "domestic-left domestic-center domestic-right"; }
+  .domestic-side, .domestic-center-column { min-width: 0; min-height: 0; display: grid; gap: 14px; }
+  .domestic-side { grid-template-rows: 1fr 1fr; }
+  .domestic-center-column { grid-template-rows: minmax(0, 72fr) minmax(0, 28fr); }
+  .domestic-left { grid-area: domestic-left; }
+  .domestic-center-column { grid-area: domestic-center; }
+  .domestic-right { grid-area: domestic-right; }
+  .domestic-side > .panel, .domestic-center-column > .panel { grid-area: auto; min-height: 0; }
   .panel { position: relative; background: linear-gradient(180deg, rgba(12,34,74,.55), rgba(6,18,44,.65));
     border: 1px solid rgba(45,110,210,.45); border-radius: 8px; padding: 10px 14px;
     box-shadow: 0 0 18px rgba(20,70,160,.25) inset; overflow: hidden; }
@@ -261,6 +266,15 @@
   #network   { grid-area: network; }
   #publisher { grid-area: publisher; }
   #policy    { grid-area: policy; }
+  /* DomesticDashboard groups panels into three nested columns. Override the
+     global panel areas above so the nested grid, not the global 3-row grid,
+     controls their placement. */
+  .domestic-main #overview,
+  .domestic-main #trend,
+  .domestic-main #domesticMapPanel,
+  .domestic-main #news,
+  .domestic-main #publisher,
+  .domestic-main #policy { grid-area: auto; }
   .chart { position: absolute; left: 10px; right: 10px; top: 42px; bottom: 8px; }
 
   /* ---- 规则总览 ---- */
@@ -284,6 +298,22 @@
   .ov-sub .k { font-size: 14px; color: #eef6ff; letter-spacing: 1px; }
   .ov-sub .v { font-size: 28px; font-weight: 700; color: #5fd0ff; margin-top: 10px;
     text-shadow: 0 0 10px rgba(90,200,255,.9), 0 0 26px rgba(50,150,255,.55); }
+  .domestic-overview-top { justify-content: center; margin-top: 14px; }
+  .domestic-overview-top .ov-main { flex-direction: column; justify-content: center; gap: 5px; padding-left: 0; }
+  .domestic-overview-top .ov-doc { width: 42px; height: 46px; }
+  .domestic-overview-top .ov-num { font-size: 46px; }
+  .domestic-overview-top .ov-label { margin-top: 2px; }
+  .domestic-overview-top + .ov-subs { gap: 8px; margin-top: 18px; padding: 0; }
+  .domestic-overview-top + .ov-subs .ov-sub { padding: 8px 0 7px; border: 1px solid rgba(60,130,230,.32); border-radius: 8px;
+    background: linear-gradient(180deg, rgba(22,62,128,.34), rgba(10,30,72,.22)); }
+  .domestic-overview-top + .ov-subs .ov-sub + .ov-sub { border-left: 1px solid rgba(60,130,230,.32); }
+  .domestic-overview-top + .ov-subs .ov-sub .v { margin-top: 4px; font-size: 23px; }
+  .domestic-type-bars { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding: 0 2px; }
+  .domestic-type-bar { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #cfe6ff; }
+  .domestic-type-label { flex: none; width: 32px; }
+  .domestic-type-track { flex: 1; height: 8px; overflow: hidden; border-radius: 5px; background: rgba(30,75,145,.55); box-shadow: inset 0 0 5px rgba(0,0,0,.3); }
+  .domestic-type-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #1e73dc, #62ddff); box-shadow: 0 0 8px rgba(80,190,255,.65); }
+  .domestic-type-pct { flex: none; width: 38px; text-align: right; color: #8fdcff; font-weight: 700; }
 
   /* ---- 热点议题 ---- */
   .hs-body { position: absolute; left: 10px; right: 10px; top: 40px; bottom: 8px; display: flex; }
