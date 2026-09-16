@@ -71,10 +71,13 @@ const option = computed(() => {
       name: '规则数量',
       type: 'map',
       map: 'china',
-      roam: false,
-      layoutCenter: ['52%', '45%'],
-      layoutSize: '185%',
-      zoom: 1.08,
+      // Keep the complete China map in the initial viewport, while allowing
+      // users to pan and zoom into provinces for inspection.
+      roam: true,
+      scaleLimit: { min: 0.85, max: 3.5 },
+      layoutCenter: ['50%', '48%'],
+      layoutSize: '100%',
+      zoom: 1,
       top: 32,
       bottom: 14,
       left: 18,
