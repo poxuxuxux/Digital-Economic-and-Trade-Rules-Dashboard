@@ -42,6 +42,17 @@ export const DOMESTIC_PUBLISHERS = [
   { name: '上海市人民政府', value: 24 },
 ]
 
+export const DOMESTIC_SCOPE_STATS = {
+  centralDepartments: 12,
+  coveredRegions: 31,
+  localInstitutions: 68,
+  nationalLevel: 286,
+  localLevel: 399,
+  annualNew: 43,
+  activeRules: 642,
+  jointPublished: 26,
+}
+
 export const DOMESTIC_LATEST_RULES = [
   { t: '《数据出境安全评估申报指南（2026年版）》', d: '2026-09-06', c: '政策', r: '国家互联网信息办公室' },
   { t: '《数字贸易标准体系建设指南》', d: '2026-08-28', c: '标准', r: '国家标准化管理委员会' },
@@ -91,6 +102,7 @@ function buildStats(years) {
     values: years.map(year => DOMESTIC_TREND.find(item => item.year === year)?.count || 0),
     provinceDistribution: DOMESTIC_PROVINCES,
     publishers: DOMESTIC_PUBLISHERS,
+    ...DOMESTIC_SCOPE_STATS,
   }
 }
 

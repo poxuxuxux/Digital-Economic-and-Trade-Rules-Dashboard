@@ -50,8 +50,9 @@
     </template>
     <template v-else>
       <div class="p-title"><span class="tag-icon"></span>国内规则总览</div>
-      <div class="ov-top domestic-overview-top">
-        <div class="ov-main">
+      <div class="domestic-overview-content">
+        <div class="domestic-overview-main">
+          <div class="domestic-total">
           <svg class="ov-doc" viewBox="0 0 58 62">
             <path d="M14 4h26l10 10v40H14z" fill="rgba(30,90,190,.25)" stroke="#3f9dff" stroke-width="2.5" stroke-linejoin="round"/>
             <path d="M40 4v10h10" fill="none" stroke="#3f9dff" stroke-width="2.5"/>
@@ -60,22 +61,41 @@
             <circle cx="42" cy="52" r="7" fill="#08152e" stroke="#7fd0ff" stroke-width="2.5"/>
             <circle cx="42" cy="52" r="2.4" fill="#7fd0ff"/>
           </svg>
-          <div>
-            <div class="ov-num">{{ s.total.toLocaleString() }}</div>
-            <div class="ov-label">国内规则总量</div>
+            <div class="domestic-total-value">
+              <div class="ov-num">{{ s.total.toLocaleString() }}</div>
+              <div class="ov-label">国内规则总量</div>
+            </div>
+          </div>
+          <div class="domestic-scope-list">
+            <div class="domestic-scope-item"><span class="domestic-scope-icon">🏛</span><span>中央部门</span><b>{{ s.centralDepartments }}</b></div>
+            <div class="domestic-scope-item"><span class="domestic-scope-icon">📍</span><span>覆盖地区</span><b>{{ s.coveredRegions }}</b></div>
+            <div class="domestic-scope-item"><span class="domestic-scope-icon">🏢</span><span>地方机构</span><b>{{ s.localInstitutions }}</b></div>
           </div>
         </div>
-      </div>
-      <div class="ov-subs">
-        <div class="ov-sub"><div class="k">政策</div><div class="v">{{ s.policy }}</div></div>
-        <div class="ov-sub"><div class="k">标准</div><div class="v">{{ s.standard }}</div></div>
-        <div class="ov-sub"><div class="k">法律</div><div class="v">{{ s.law }}</div></div>
-      </div>
-      <div class="domestic-type-bars">
-        <div v-for="type in domesticTypes" :key="type.key" class="domestic-type-bar">
-          <span class="domestic-type-label">{{ type.label }}</span>
-          <span class="domestic-type-track"><i :style="{ width: `${type.pct}%` }"></i></span>
-          <span class="domestic-type-pct">{{ type.pct }}%</span>
+        <div class="domestic-level-block">
+          <div class="domestic-section-label">发布层级</div>
+          <div class="domestic-level-list">
+            <div v-for="level in domesticLevels" :key="level.key" class="domestic-level-item">
+              <span class="domestic-level-label">{{ level.label }}</span>
+              <b>{{ level.value }}</b>
+              <span class="domestic-level-track"><i :style="{ width: `${level.pct}%` }"></i></span>
+              <span class="domestic-level-pct">{{ level.pct }}%</span>
+            </div>
+          </div>
+        </div>
+        <div class="domestic-overview-divider"></div>
+        <div class="ov-subs domestic-type-subs">
+          <div v-for="type in domesticTypes" :key="type.key" class="ov-sub">
+            <div class="k">{{ type.label }}</div>
+            <div class="v">{{ type.value }}</div>
+            <div class="domestic-type-pct">{{ type.pct }}%</div>
+          </div>
+        </div>
+        <div class="domestic-overview-divider domestic-status-divider"></div>
+        <div class="ov-subs domestic-status-subs">
+          <div class="ov-sub"><div class="k">本年新增</div><div class="v">{{ s.annualNew }}</div></div>
+          <div class="ov-sub"><div class="k">现行有效</div><div class="v">{{ s.activeRules }}</div></div>
+          <div class="ov-sub"><div class="k">联合发布</div><div class="v">{{ s.jointPublished }}</div></div>
         </div>
       </div>
     </template>
@@ -93,5 +113,14 @@ const domesticTypes = computed(() => {
     { key: 'standard', label: '标准', value: domesticStats.value.standard },
     { key: 'law', label: '法律', value: domesticStats.value.law },
   ].map(type => ({ ...type, pct: Math.round(type.value / total * 100) }))
+})
+const domesticLevels = computed(() => {
+  const total = domesticStats.value.total || 1
+  const national = Math.round(total * 286 / 685)
+  const local = Math.max(0, total - national)
+  return [
+    { key: 'national', label: '国家级', value: national },
+    { key: 'local', label: '地方级', value: local },
+  ].map(level => ({ ...level, pct: Math.round(level.value / total * 100) }))
 })
 </script>
